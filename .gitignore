@@ -1,0 +1,5 @@
+.sencha/
+build/
+ext/
+packages/
+.project
