@@ -135,14 +135,6 @@ Ext.define('ShogunClient.Application', {
     /**
      *
      */
-    getAppViewportLayout: function(appLayout) {
-        var me = this;
-        return me.getValueByKey(appLayout.viewport, 'layout');
-    },
-
-    /**
-     *
-     */
     createViewport: function(appConf) {
         var me = this;
         var viewportLayout = me.getValueByKey(appConf, 'layout');
