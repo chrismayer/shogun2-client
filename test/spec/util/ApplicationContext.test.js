@@ -18,19 +18,21 @@ describe('ShogunClient.util.ApplicationContext', function() {
 
     describe('Static methods', function() {
         describe('#loadApplicationContext', function() {
-            var fn = clazz.loadApplicationContext;
             it('is defined', function() {
-                expect(fn).to.not.be(undefined);
+                expect(clazz.loadApplicationContext).to.not.be(undefined);
             });
-            it('is a function', function(){
-                expect(fn).to.be.a('function');
+            it('is a function', function() {
+                expect(clazz.loadApplicationContext).to.be.a('function');
+            });
+            it('returns undefined if no callback function is given', function() {
+                expect(clazz.loadApplicationContext()).to.be(undefined);
             });
         });
         describe('#getValueByKey', function() {
             it('is defined', function() {
                 expect(clazz.getValueByKey).to.not.be(undefined);
             });
-            it('is a function', function(){
+            it('is a function', function() {
                 expect(clazz.getValueByKey).to.be.a('function');
             });
             it('returns a key by a query key', function() {

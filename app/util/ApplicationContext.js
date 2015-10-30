@@ -37,7 +37,7 @@ Ext.define('ShogunClient.util.ApplicationContext', {
                         }
                         var appConf = me.getValueByKey(reponseObj, 'application');
 
-                        if (typeof cbFn === "function") {
+                        if (cbFn && Ext.isFunction(cbFn)) {
                             cbFn(appConf);
                         }
                     } else {
