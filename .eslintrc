@@ -1,11 +1,24 @@
 {
+    "env": {
+        "browser": true,
+        "node": true
+    },
     "globals": {
         "Ext": false,
         "GeoExt": false,
         "ol": false,
         "window": false,
         "location": false,
-        "BasiGX": true
+        "BasiGX": true,
+        "ShogunClient": true,
+
+        "afterEach": false,
+        "beforeEach": false,
+        "describe": false,
+        "document": false,
+        "expect": false,
+        "it": false,
+        "sinon": false
     },
     "rules": {
         "comma-dangle": 2,
