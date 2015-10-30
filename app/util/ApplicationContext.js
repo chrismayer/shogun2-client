@@ -4,18 +4,61 @@ Ext.define('ShogunClient.util.ApplicationContext', {
 
         // i18n
         errorMsgTitle: '٩(͡๏̯͡๏)۶',
-        appContextErrorMsg: 'Fehler beim Laden des ApplicationContext:<p><code>{0}</code>',
+        appContextErrorMsg: 'Fehler beim Laden des ApplicationContext:' +
+                '<p><code>{0}</code>',
+        appContextNotLoadedErrorMsg: 'Couldn\'t find the application context.' +
+                ' Did you load the context with loadApplicationContext() and ' +
+                'did you set it to the main application config?',
+        appContextNotSetErrorMsg: 'Couldn\'t set the application context! ' +
+                'It\'s very unlike the application will work as expected...',
         // i18n
 
         /**
-         *
+         * The path configs needed by this class.
          */
         pathConfig: {
             appContextUrl: './resources/appContext.json'
         },
 
         /**
+         * Returns the application context from the main Ext.Application if
+         * already set.
+         */
+        getApplicationContext: function() {
+            var me = this;
+
+            if (ShogunClient.getApplication() &&
+                    ShogunClient.getApplication().getApplicationContext()) {
+                return ShogunClient.getApplication().getApplicationContext();
+            } else {
+                Ext.Logger.error(me.appContextNotLoadedErrorMsg);
+            }
+        },
+
+        /**
+         * Sets the provided application context to the main Ext.Application.
+         */
+        setApplicationContext: function(appCtx) {
+            var me = this;
+
+            if (appCtx && ShogunClient.getApplication() &&
+                    ShogunClient.getApplication().setApplicationContext()) {
+                ShogunClient.getApplication().setApplicationContext(appCtx);
+            } else {
+                Ext.Logger.error(me.appContextNotSetErrorMsg);
+            }
+        },
+
+        /**
+         * Load the application context by the provided appContextUrl.
          *
+         * This method should be called on application initialization only. When
+         * called it loads the context via AJAX and sets the provided response
+         * object to the application itself. Afterwards it can be accessed using
+         * the getApplicationContext() method.
+         *
+         * @param {Function} [cbFn] The callback function to be called on
+         *     success.
          */
         loadApplicationContext: function(cbFn) {
             var me = this;
@@ -27,7 +70,8 @@ Ext.define('ShogunClient.util.ApplicationContext', {
                 success: function(response) {
                     if (response && response.responseText) {
                         try {
-                            var reponseObj = Ext.JSON.decode(response.responseText);
+                            var reponseObj = Ext.JSON.decode(
+                                    response.responseText);
                         } catch(err) {
                             Ext.Msg.alert(
                                 me.errorMsgTitle,
@@ -35,10 +79,17 @@ Ext.define('ShogunClient.util.ApplicationContext', {
                             );
                             return false;
                         }
-                        var appConf = me.getValueByKey(reponseObj, 'application');
 
+                        // set the application context to the application to be
+                        // accessed easily later
+                        me.setApplicationContext(reponseObj);
+
+                        // if we were called with a callback function as single
+                        // argument call this function with the application
+                        // context as parameter as the initiator wants to deal
+                        // with it maybe
                         if (cbFn && Ext.isFunction(cbFn)) {
-                            cbFn(appConf);
+                            cbFn(reponseObj);
                         }
                     } else {
                         Ext.Msg.alert(
@@ -61,29 +112,59 @@ Ext.define('ShogunClient.util.ApplicationContext', {
         },
 
         /**
+         * Method may be used to return a value of a given input object by a
+         * provided query key. The query key can be used in two ways:
+         *   * Single-value: Find the first matching key in the provided object
+         *     (Use with caution as the object/array order may not be as
+         *     expected and/or deterministic!).
+         *   * Backslash ("/") separated value: Find the last (!) matching key
+         *     in the provided object.
          *
+         * @param {String} queryKey The key to be searched.
+         * @param {Object} [queryObject] The object to be searched on. If not
+         *     provided the global application context (on root-level) will
+         *     be used.
+         *
+         * @return The target value or undefined if the given couldn't be found.
          */
-        getValueByKey: function(queryObject, queryKey) {
+        getValue: function(queryKey, queryObject) {
             var me = this,
                 queryMatch;
 
-            if (!queryObject || !queryKey) {
-                Ext.Logger.error('Missing input parameter(s): queryObject and ' +
-                        'queryKey are required.');
-                return false;
+            // if weren't called with an queryObject, get the global application
+            // context as input value
+            if (!queryObject) {
+                queryObject = me.getApplicationContext();
             }
 
             if (!Ext.isObject(queryObject)) {
-                Ext.Logger.error('First parameter has to be an object');
+                Ext.Logger.error('Missing input parameter ' +
+                        'queryObject <Object>!');
                 return false;
             }
 
             if (!Ext.isString(queryKey)) {
-                Ext.Logger.error('Second parameter has to be a string');
+                Ext.Logger.error('Missing input parameter queryKey <String>!');
                 return false;
             }
 
-            // iterate over the input object
+            // if the queryKey contains backslashes we understand this as the
+            // path in the object-hierarchy and will return the last matching
+            // value
+            if (queryKey.split('\/').length > 1) {
+                Ext.each(queryKey.split('\/'), function(key) {
+                    if (queryObject[key]) {
+                        queryObject = queryObject[key];
+                    } else {
+                        // if the last entry wasn't found return the last match
+                        return queryObject;
+                    }
+                });
+                return queryObject;
+            }
+
+            // iterate over the input object and return the first matching
+            // value
             for (var key in queryObject) {
 
                 // get the current value
@@ -97,7 +178,7 @@ Ext.define('ShogunClient.util.ApplicationContext', {
 
                 // if the value is an object, let's call ourself recursively
                 if (Ext.isObject(value)) {
-                    queryMatch = me.getValueByKey(value, queryKey);
+                    queryMatch = me.getValue(queryKey, value);
                     if (queryMatch) {
                         return queryMatch;
                     }
@@ -109,7 +190,7 @@ Ext.define('ShogunClient.util.ApplicationContext', {
                     for (var i = 0; i < value.length; i++) {
                         var val = value[i];
                         if (Ext.isObject(val)) {
-                            queryMatch = me.getValueByKey(val, queryKey);
+                            queryMatch = me.getValue(queryKey, val);
                             if (queryMatch) {
                                 return queryMatch;
                             }
@@ -119,7 +200,7 @@ Ext.define('ShogunClient.util.ApplicationContext', {
             }
 
             // if we couldn't find any match, return false
-            return false;
+            return undefined;
         }
     }
 });

@@ -26,7 +26,7 @@
                             "width"
                         ],
                         "regions": [
-                            "south",
+                            "north",
                             "west",
                             "center"
                         ]
@@ -39,14 +39,14 @@
                 "subModules": [
                     {
                         "title": "Sued",
-                        "xtype": "panel",
+                        "xtype": "basigx-panel-header",
                         "height": 100,
                         "split": true,
                         "margin": "0 5 5 5"
                     },
                     {
                         "title": "West Region is collapsible",
-                        "xtype": "panel",
+                        "xtype": "basigx-panel-legendtree",
                         "margin": "5 0 0 5",
                         "width": 200,
                         "collapsible": true,

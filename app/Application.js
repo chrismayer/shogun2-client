@@ -1,7 +1,7 @@
 /**
- * The main application class. An instance of this class is created by app.js when it
- * calls Ext.application(). This is the ideal place to handle application launch and
- * initialization details.
+ * The main application class. An instance of this class is created by app.js
+ * when it calls Ext.application(). This is the ideal place to handle
+ * application launch and initialization details.
  */
 Ext.define('ShogunClient.Application', {
     extend: 'Ext.app.Application',
@@ -10,13 +10,17 @@ Ext.define('ShogunClient.Application', {
 
     stores: [],
 
+    config: {
+        applicationContext: null
+    },
+
     init: function() {
         var me = this;
         var appCtxUtil = ShogunClient.util.ApplicationContext;
 
         // load the application context and build the application on success
-        appCtxUtil.loadApplicationContext(function(appConf) {
-            me.createViewport(appConf);
+        appCtxUtil.loadApplicationContext(function() {
+            me.createViewport();
         });
 
     },
@@ -24,25 +28,25 @@ Ext.define('ShogunClient.Application', {
     /**
      *
      */
-    createViewport: function(appConf) {
+    createViewport: function() {
         var me = this;
         var appCtxUtil = ShogunClient.util.ApplicationContext;
-        var viewportLayout = appCtxUtil.getValueByKey(appConf, 'layout');
-        var viewportLayoutType = appCtxUtil.getValueByKey(viewportLayout, 'type');
-        var viewportLayoutPlacements = appCtxUtil.getValueByKey(viewportLayout, 'regions');
-        var viewportModules = appCtxUtil.getValueByKey(appConf, 'subModules');
+        var appViewport = appCtxUtil.getValue('viewport');
+        var appViewportType = appCtxUtil.getValue('type', appViewport);
+        var appViewportPlacements = appCtxUtil.getValue('regions', appViewport);
+        var appViewportModules = appCtxUtil.getValue('subModules');
         var items = [];
 
         // iterate over each placement property and find the corresponding
         // viewport modules
-        Ext.Array.each(viewportLayoutPlacements, function(placement, idx) {
-            var item = viewportModules[idx];
+        Ext.Array.each(appViewportPlacements, function(placement, idx) {
+            var item = appViewportModules[idx];
             item['region'] = placement;
             items.push(item);
         });
 
         Ext.create('ShogunClient.view.container.Viewport', {
-            layout: viewportLayoutType,
+            layout: appViewportType,
             items: items
         });
 

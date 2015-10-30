@@ -1,3 +1,5 @@
+/*eslint max-len: [0, 80, 4]*/
+
 Ext.Loader.syncRequire(['ShogunClient.util.ApplicationContext']);
 
 describe('ShogunClient.util.ApplicationContext', function() {
@@ -10,8 +12,8 @@ describe('ShogunClient.util.ApplicationContext', function() {
         });
     });
 
-    describe('has all necessary parameters set', function() {
-        it('#appContextUrl', function() {
+    describe('All necessary parameters set', function() {
+        it('appContextUrl', function() {
             expect(clazz.pathConfig.appContextUrl).to.be.a('string');
         });
     });
@@ -28,21 +30,24 @@ describe('ShogunClient.util.ApplicationContext', function() {
                 expect(clazz.loadApplicationContext()).to.be(undefined);
             });
         });
-        describe('#getValueByKey', function() {
+        describe('#getValue', function() {
             it('is defined', function() {
-                expect(clazz.getValueByKey).to.not.be(undefined);
+                expect(clazz.getValue).to.not.be(undefined);
             });
             it('is a function', function() {
-                expect(clazz.getValueByKey).to.be.a('function');
+                expect(clazz.getValue).to.be.a('function');
             });
             it('returns a key by a query key', function() {
-                expect(clazz.getValueByKey({'key': 'value'}, 'key')).to.be('value');
+                expect(clazz.getValue('key', {'key': 'value'})).to.be('value');
             });
             it('returns a nested key by a query key', function() {
-                expect(clazz.getValueByKey({'rootkey': {'key': 'value'}}, 'key')).to.be('value');
+                expect(clazz.getValue('key', {'rootkey': {'key': 'value'}})).to.be('value');
             });
             it('returns a nested key inside an array by a query key', function() {
-                expect(clazz.getValueByKey({'rootkey': [{'key1': 'value1'}, {'key2': 'value2'}]}, 'key2')).to.be('value2');
+                expect(clazz.getValue('key2', {'rootkey': [{'key1': 'value1'}, {'key2': 'value2'}]})).to.be('value2');
+            });
+            it('returns a key by a concatenated query key', function() {
+                expect(clazz.getValue('key1/key2', {'key1': {'key2': 'value2'}})).to.be('value2');
             });
         });
     });
