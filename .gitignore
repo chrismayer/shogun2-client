@@ -13,3 +13,6 @@ node_modules
 build/
 ext/
 packages/
+classic.json
+sass/example/bootstrap.json
+sass/example/bootstrap.js
