@@ -157,6 +157,11 @@ Ext.define('ShogunClient.Application', {
         });
 
         me.setMainView('ShogunClient.view.container.Viewport');
+
+    },
+
+    launch: function () {
+        // TODO - Launch the application
     },
 
     /*
