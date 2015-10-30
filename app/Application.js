@@ -10,126 +10,15 @@ Ext.define('ShogunClient.Application', {
 
     stores: [],
 
-    appContextUrl: './resources/appContext.json',
-
-    errorMsgTitle: '٩(͡๏̯͡๏)۶',
-
-    appContextErrorMsg: 'Fehler beim Laden des ApplicationContext:<p><code>{0}</code>',
-
     init: function() {
         var me = this;
+        var appCtxUtil = ShogunClient.util.ApplicationContext;
 
-        // load the application context
-        me.loadApplicationContext();
-
-        // build the application on success
-        me.on({
-            appcontextloaded: me.createViewport
+        // load the application context and build the application on success
+        appCtxUtil.loadApplicationContext(function(appConf) {
+            me.createViewport(appConf);
         });
-    },
 
-    /**
-     *
-     */
-    loadApplicationContext: function() {
-        var me = this;
-
-        // load the application context
-        Ext.Ajax.request({
-            url: me.appContextUrl,
-            method: 'GET',
-            success: function(response) {
-                if (response && response.responseText) {
-                    try {
-                        var reponseObj = Ext.JSON.decode(response.responseText);
-                    } catch(err) {
-                        Ext.Msg.alert(
-                            me.errorMsgTitle,
-                            Ext.String.format(me.appContextErrorMsg, err)
-                        );
-                        return false;
-                    }
-                    var appConf = me.getValueByKey(reponseObj, 'application');
-                    me.fireEvent('appcontextloaded', appConf);
-                } else {
-                    Ext.Msg.alert(
-                        me.errorMsgTitle,
-                        Ext.String.format(me.appContextErrorMsg)
-                    );
-                }
-            },
-            failure: function(response) {
-                var errorMsg;
-                if (response && response.responseText) {
-                    errorMsg = response.responseText;
-                }
-                Ext.Msg.alert(
-                    me.errorMsgTitle,
-                    Ext.String.format(me.appContextErrorMsg, errorMsg)
-                );
-            }
-        });
-    },
-
-    /**
-     *
-     */
-    getValueByKey: function(queryObject, queryKey) {
-        var me = this,
-            queryMatch;
-
-        if (!queryObject || !queryKey) {
-            Ext.Logger.error('Missing input parameter(s): queryObject and ' +
-                    'queryKey are required.');
-            return false;
-        }
-
-        if (!Ext.isObject(queryObject)) {
-            Ext.Logger.error('First parameter has to be an object');
-            return false;
-        }
-
-        if (!Ext.isString(queryKey)) {
-            Ext.Logger.error('Second parameter has to be a string');
-            return false;
-        }
-
-        // iterate over the input object
-        for (var key in queryObject) {
-
-            // get the current value
-            var value = queryObject[key];
-
-            // if the given key is the queryKey, let's return the
-            // corresponding value
-            if (key === queryKey) {
-                return value;
-            }
-
-            // if the value is an object, let's call ourself recursively
-            if (Ext.isObject(value)) {
-                queryMatch = me.getValueByKey(value, queryKey);
-                if (queryMatch) {
-                    return queryMatch;
-                }
-            }
-
-            // if the value is an array and the array contains an object as
-            // well, let's call ourself recursively for this object
-            if (Ext.isArray(value)) {
-                for (var val in value) {
-                    if (Ext.isObject(val)) {
-                        queryMatch = me.getValueByKey(val, queryKey);
-                        if (queryMatch) {
-                            return queryMatch;
-                        }
-                    }
-                }
-            }
-        }
-
-        // if we couldn't find any match, return false
-        return false;
     },
 
     /**
@@ -137,10 +26,11 @@ Ext.define('ShogunClient.Application', {
      */
     createViewport: function(appConf) {
         var me = this;
-        var viewportLayout = me.getValueByKey(appConf, 'layout');
-        var viewportLayoutType = me.getValueByKey(viewportLayout, 'type');
-        var viewportLayoutPlacements = me.getValueByKey(viewportLayout, 'regions');
-        var viewportModules = me.getValueByKey(appConf, 'subModules');
+        var appCtxUtil = ShogunClient.util.ApplicationContext;
+        var viewportLayout = appCtxUtil.getValueByKey(appConf, 'layout');
+        var viewportLayoutType = appCtxUtil.getValueByKey(viewportLayout, 'type');
+        var viewportLayoutPlacements = appCtxUtil.getValueByKey(viewportLayout, 'regions');
+        var viewportModules = appCtxUtil.getValueByKey(appConf, 'subModules');
         var items = [];
 
         // iterate over each placement property and find the corresponding
