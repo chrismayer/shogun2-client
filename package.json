@@ -1,0 +1,23 @@
+{
+  "name": "shogun-client",
+  "type": "code",
+  "version": "1.0.0",
+  "description": "Basic GIS-Client for shogun2",
+  "license": "GPL-3.0",
+  "author": "terrestris GmbH & Co. KG",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "js-lint": "eslint ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/terrestris/shogun2-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/terrestris/shogun2-client/issues"
+  },
+  "homepage": "https://github.com/terrestris/shogun2-client#readme",
+  "dependencies": {
+    "eslint": "^1.7.3"
+  }
+}
