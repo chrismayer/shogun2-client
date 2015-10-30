@@ -1,4 +1,15 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directory
+node_modules
+
+# Eclipse
+.project
+
+# Sencha 
 build/
 ext/
 packages/
-.project
