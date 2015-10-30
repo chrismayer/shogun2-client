@@ -38,7 +38,7 @@ Ext.define('ShogunClient.Application', {
         Ext.Ajax.request({
             url: me.appContextUrl,
             method: 'GET',
-            success: function(response, opts) {
+            success: function(response) {
                 if (response && response.responseText) {
                     try {
                         var reponseObj = Ext.JSON.decode(response.responseText);
@@ -58,7 +58,7 @@ Ext.define('ShogunClient.Application', {
                     );
                 }
             },
-            failure: function(response, opts) {
+            failure: function(response) {
                 var errorMsg;
                 if (response && response.responseText) {
                     errorMsg = response.responseText;
@@ -80,7 +80,7 @@ Ext.define('ShogunClient.Application', {
 
         if (!queryObject || !queryKey) {
             Ext.Logger.error('Missing input parameter(s): queryObject and ' +
-                    'queryKey are required.')
+                    'queryKey are required.');
             return false;
         }
 
@@ -117,14 +117,14 @@ Ext.define('ShogunClient.Application', {
             // if the value is an array and the array contains an object as
             // well, let's call ourself recursively for this object
             if (Ext.isArray(value)) {
-                Ext.each(value, function(val) {
+                for (var val in value) {
                     if (Ext.isObject(val)) {
                         queryMatch = me.getValueByKey(val, queryKey);
                         if (queryMatch) {
                             return queryMatch;
                         }
                     }
-                });
+                }
             }
         }
 
