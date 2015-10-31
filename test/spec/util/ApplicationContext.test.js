@@ -1,5 +1,4 @@
 /*eslint max-len: [0, 80, 4]*/
-
 Ext.Loader.syncRequire(['ShogunClient.util.ApplicationContext']);
 
 describe('ShogunClient.util.ApplicationContext', function() {
