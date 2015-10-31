@@ -55,13 +55,13 @@
                     },
                     {
                         "title": "Center Region",
-                        "xtype": "basigx-component-map"
+                        "xtype": "shogun-component-map"
                     }
                 ]
             },
             "startCenter": [
-                829594,
-                6708662
+                829473,
+                6708897
             ],
             "startZoom": 16,
             "mapLayers": [

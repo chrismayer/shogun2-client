@@ -5,7 +5,8 @@
         dependencies = [
             'basics.test.js',
             'Application.test.js',
-            'util/ApplicationContext.test.js'
+            'util/ApplicationContext.test.js',
+            'view/component/MapController.test.js'
         ],
         getScriptTag = global.TestUtil.getExternalScriptTag,
         dependencyCnt = dependencies.length,
