@@ -16,3 +16,8 @@ packages/
 classic.json
 sass/example/bootstrap.json
 sass/example/bootstrap.js
+
+# Coverage
+.instrumented/
+test/.index_coverage.html
+coverage/
