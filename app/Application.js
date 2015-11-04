@@ -6,6 +6,10 @@
 Ext.define('ShogunClient.Application', {
     extend: 'Ext.app.Application',
 
+    requires: [
+       'ShogunClient.util.ApplicationContext'
+    ],
+
     name: 'ShogunClient',
 
     stores: [],
