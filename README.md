@@ -11,7 +11,7 @@
 
 ## Installation
 
-* Update/checkout SHOGun2 and run `mvn clean install` in SHOGun2 project directory
+* Update/checkout SHOGun2 and run `mvn clean install` in SHOGun2 project directory (the `src` folder)
   * Please note: If SHOGun2 is updated you also have to reinitialize with `mvn clean install`
 * Generate your own fork of *shogun2-client*
 * Generate web application based on shogun2-webapp-archetype, e.g. with
