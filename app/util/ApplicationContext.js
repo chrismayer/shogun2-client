@@ -1,11 +1,13 @@
 Ext.define('ShogunClient.util.ApplicationContext', {
+    extend: 'BasiGX.util.ConfigParser',
 
     statics: {
 
         // i18n
         errorMsgTitle: '٩(͡๏̯͡๏)۶',
         appContextErrorMsg: 'Fehler beim Laden des ApplicationContext:' +
-                '<p><code>{0}</code>',
+                '<br></br><code>{0}</code><br></br>',
+        appContextNoIdGivenErrorMsg: 'No applicationID given!',
         appContextNotLoadedErrorMsg: 'Couldn\'t find the application context.' +
                 ' Did you load the context with loadApplicationContext() and ' +
                 'did you set it to the main application config?',
@@ -17,7 +19,7 @@ Ext.define('ShogunClient.util.ApplicationContext', {
          * The path configs needed by this class.
          */
         pathConfig: {
-            appContextUrl: './resources/appContext.json'
+            appContextUrlTpl: '../application/get.action?id={0}'
         },
 
         /**
@@ -57,15 +59,25 @@ Ext.define('ShogunClient.util.ApplicationContext', {
          * object to the application itself. Afterwards it can be accessed using
          * the getApplicationContext() method.
          *
+         * @param {String} appId The application ID to load.
          * @param {Function} [cbFn] The callback function to be called on
          *     success.
          */
-        loadApplicationContext: function(cbFn) {
+        loadApplicationContext: function(appId, cbFn) {
             var me = this;
+
+            if (!appId) {
+                Ext.Msg.alert(
+                    me.errorMsgTitle,
+                    Ext.String.format(me.appContextErrorMsg,
+                            me.appContextNoIdGivenErrorMsg)
+                );
+                return false;
+            }
 
             // load the application context
             Ext.Ajax.request({
-                url: me.pathConfig.appContextUrl,
+                url: Ext.String.format(me.pathConfig.appContextUrlTpl, appId),
                 method: 'GET',
                 success: function(response) {
                     if (response && response.responseText) {
@@ -109,6 +121,134 @@ Ext.define('ShogunClient.util.ApplicationContext', {
                     );
                 }
             });
+        },
+
+        /**
+         *
+         */
+        getMapConfig: function() {
+            var me = this;
+            return me.getValue('mapConfig');
+        },
+
+        /**
+         *
+         */
+        getViewport: function() {
+            var me = this;
+            return me.getValue('viewport');
+        },
+
+        /**
+         *
+         */
+        setupMap: function() {
+            var me = this;
+            var mapConfig = me.getMapConfig();
+
+            if (!mapConfig) {
+                Ext.Logger.error('No mapConfig object found!');
+                return false;
+            }
+
+            me.map = new ol.Map({
+                logo: false,
+//                layers: [
+//                    new ol.layer.Tile({
+//                        name: 'OSM',
+//                        source: new ol.source.OSM()
+//                    })
+//                ],
+                view: new ol.View({
+                    center: [
+                        mapConfig.center.x,
+                        mapConfig.center.y
+                    ],
+                    zoom: mapConfig.zoom || 2,
+                    maxResolution: mapConfig.maxResolution.resolution,
+                    minResolution: mapConfig.minResolution.resolution,
+                    extent: [
+                        mapConfig.extent.lowerLeft.x,
+                        mapConfig.extent.lowerLeft.y,
+                        mapConfig.extent.upperRight.x,
+                        mapConfig.extent.upperRight.y
+                    ],
+                    projection: me.getProjectionString(),
+                    resolutions: Ext.Array.pluck(mapConfig.resolutions,
+                            'resolution'),
+                    rotation: mapConfig.rotation || 0
+                })
+            });
+
+            var layerGroup = new ol.layer.Group({layers: me.createOlLayers()});
+            me.map.setLayerGroup(layerGroup);
+
+            return me.map;
+        },
+
+        /**
+         *
+         */
+        createOlLayers: function() {
+            var me = this;
+            var mapLayers = me.getValue('mapLayers');
+            var olLayers = [];
+
+            // reverse the layers array to obtain the given order by the
+            // context
+            Ext.each(mapLayers.reverse(), function(mapLayer) {
+                olLayers.push(me.createOlLayer(mapLayer));
+            });
+
+            return olLayers;
+        },
+
+        /**
+         *
+         */
+        createOlLayer: function(mapLayer) {
+            var mapLayerType = mapLayer.type;
+            var mapLayerSource = mapLayer.source;
+            var mapLayerSourceType = mapLayerSource.type;
+//            var mapLayerSourceTileGrid = mapLayerSource.tileGrid;
+
+            var olLayer = new ol.layer[mapLayerType]({
+                name: mapLayer.name,
+                source: new ol.source[mapLayerSourceType]({
+                    url: mapLayerSource.url,
+//                    tileGrid: new ol.tilegrid.TileGrid({
+//                        tileSize: mapLayerSourceTileGrid.
+//                    }),
+                    params: {
+                        'LAYERS': Ext.Array.pluck(mapLayerSource.layerNames,
+                                'layerName'),
+                        'VERSION': mapLayerSource.version,
+                        'TILED': true
+                    },
+                    serverType: 'geoserver'
+                })
+            });
+
+            return olLayer;
+        },
+
+        /**
+         *
+         */
+        getProjectionString: function() {
+            var me = this;
+            var mapConfig = me.getMapConfig();
+            var mapConfigProjection = mapConfig.projection;
+
+            if (!mapConfigProjection) {
+                Ext.Logger.error('No map projection found in mapConfig!');
+            }
+
+            if (mapConfigProjection.indexOf('EPSG') > -1) {
+                return mapConfigProjection;
+            } else {
+                return Ext.String.format('EPSG:{0}', mapConfigProjection);
+            }
         },
 
         /**
