@@ -81,7 +81,7 @@
             "1tbs"
         ],
         "eol-last": 1,
-        "indent": 0,
+        "indent": 1,
         "linebreak-style": [
             2,
             "unix"
