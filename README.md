@@ -6,12 +6,12 @@
 
 *shogun2-client* basically requires the same libraries / tools as [SHOGun2](https://github.com/terrestris/shogun2) and [BasiGX](https://github.com/terrestris/BasiGX) , espacially:
 * [Apache Maven](https://maven.apache.org/)
-* [Sencha Cmd](https://www.sencha.com/products/sencha-cmd/)
+* [Sencha Cmd v 6.0.2.14](https://www.sencha.com/products/sencha-cmd/)
 * [ExtJS 6](https://www.sencha.com/products/extjs/#overview)
 
 ## Installation
 
-* Update/checkout SHOGun2 and run `mvn clean install` in SHOGun2 project directory
+* Update/checkout SHOGun2 and run `mvn clean install` in SHOGun2 project directory (the `src` folder)
   * Please note: If SHOGun2 is updated you also have to reinitialize with `mvn clean install`
 * Generate your own fork of *shogun2-client*
 * Generate web application based on shogun2-webapp-archetype, e.g. with
@@ -27,8 +27,6 @@
   `git remote add upstream https://github.com/terrestris/shogun2-client.git`
 
 * Run `sencha app upgrade /path/to/extjs`
-* Add the BasiGX ExtJS repository:
-  `sencha package repo add BasiGX  http://terrestris.github.io/BasiGX/cmd/pkgs`
 
 * Run `sencha app refresh`
 
