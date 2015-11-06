@@ -12,8 +12,8 @@ Ext.define('ShogunClient.view.component.MapController', {
 
         if (!view.getMap()) {
             var appCtxUtil = ShogunClient.util.ApplicationContext;
-            var appCtx = appCtxUtil.getApplicationContext();
-            var olMap = BasiGX.util.ConfigParser.setupMap(appCtx);
+            // TODO: move setupMap() to mapController?
+            var olMap = appCtxUtil.setupMap();
             view.setMap(olMap);
         }
     },
