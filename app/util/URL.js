@@ -3,7 +3,6 @@ Ext.define('ShogunClient.util.URL', {
     statics: {
 
         //i18n
-
         //i18n
 
         /**
