@@ -124,15 +124,9 @@ Ext.define('ShogunClient.util.ApplicationContext', {
         },
 
         /**
+         * Returns the `viewport` configuration object.
          *
-         */
-        getMapConfig: function() {
-            var me = this;
-            return me.getValue('mapConfig');
-        },
-
-        /**
-         *
+         * @return {Object} The viewport configuration.
          */
         getViewport: function() {
             var me = this;
@@ -140,115 +134,23 @@ Ext.define('ShogunClient.util.ApplicationContext', {
         },
 
         /**
+         * Returns the `mapConfig` configuration object.
          *
+         * @return {Object} The map configuration.
          */
-        setupMap: function() {
+        getMapConfig: function() {
             var me = this;
-            var mapConfig = me.getMapConfig();
-
-            if (!mapConfig) {
-                Ext.Logger.error('No mapConfig object found!');
-                return false;
-            }
-
-            me.map = new ol.Map({
-                logo: false,
-//                layers: [
-//                    new ol.layer.Tile({
-//                        name: 'OSM',
-//                        source: new ol.source.OSM()
-//                    })
-//                ],
-                view: new ol.View({
-                    center: [
-                        mapConfig.center.x,
-                        mapConfig.center.y
-                    ],
-                    zoom: mapConfig.zoom || 2,
-                    maxResolution: mapConfig.maxResolution.resolution,
-                    minResolution: mapConfig.minResolution.resolution,
-                    extent: [
-                        mapConfig.extent.lowerLeft.x,
-                        mapConfig.extent.lowerLeft.y,
-                        mapConfig.extent.upperRight.x,
-                        mapConfig.extent.upperRight.y
-                    ],
-                    projection: me.getProjectionString(),
-                    resolutions: Ext.Array.pluck(mapConfig.resolutions,
-                            'resolution'),
-                    rotation: mapConfig.rotation || 0
-                })
-            });
-
-            var layerGroup = new ol.layer.Group({layers: me.createOlLayers()});
-            me.map.setLayerGroup(layerGroup);
-
-            return me.map;
+            return me.getValue('mapConfig');
         },
 
         /**
+         * Returns the `mapControls` configuration object.
          *
+         * @return {Object} The map controls configuration.
          */
-        createOlLayers: function() {
+        getMapControls: function() {
             var me = this;
-            var mapLayers = me.getValue('mapLayers');
-            var olLayers = [];
-
-            // reverse the layers array to obtain the given order by the
-            // context
-            Ext.each(mapLayers.reverse(), function(mapLayer) {
-                olLayers.push(me.createOlLayer(mapLayer));
-            });
-
-            return olLayers;
-        },
-
-        /**
-         *
-         */
-        createOlLayer: function(mapLayer) {
-            var mapLayerType = mapLayer.type;
-            var mapLayerSource = mapLayer.source;
-            var mapLayerSourceType = mapLayerSource.type;
-//            var mapLayerSourceTileGrid = mapLayerSource.tileGrid;
-
-            var olLayer = new ol.layer[mapLayerType]({
-                name: mapLayer.name,
-                source: new ol.source[mapLayerSourceType]({
-                    url: mapLayerSource.url,
-//                    tileGrid: new ol.tilegrid.TileGrid({
-//                        tileSize: mapLayerSourceTileGrid.
-//                    }),
-                    params: {
-                        'LAYERS': Ext.Array.pluck(mapLayerSource.layerNames,
-                                'layerName'),
-                        'VERSION': mapLayerSource.version,
-                        'TILED': true
-                    },
-                    serverType: 'geoserver'
-                })
-            });
-
-            return olLayer;
-        },
-
-        /**
-         *
-         */
-        getProjectionString: function() {
-            var me = this;
-            var mapConfig = me.getMapConfig();
-            var mapConfigProjection = mapConfig.projection;
-
-            if (!mapConfigProjection) {
-                Ext.Logger.error('No map projection found in mapConfig!');
-            }
-
-            if (mapConfigProjection.indexOf('EPSG') > -1) {
-                return mapConfigProjection;
-            } else {
-                return Ext.String.format('EPSG:{0}', mapConfigProjection);
-            }
+            return me.getValue('mapControls');
         },
 
         /**
