@@ -123,9 +123,16 @@ Ext.define('ShogunClient.view.component.MapController', {
         var me = this;
         var mapLayerAppearance = mapLayer.appearance;
 
+        // check for required options
+        if (!mapLayer.type) {
+            Ext.Logger.warn('Could not create the ol.layer. Missing ' +
+                    'property type');
+            return false;
+        }
+
         var olLayer = new ol.layer[mapLayer.type]({
             name: mapLayer.name || 'UNNAMED LAYER',
-            opacity: mapLayerAppearance.opacity || 1,
+            opacity: mapLayerAppearance.opacity,
             visible: mapLayerAppearance.visible,
             minResolution: mapLayerAppearance.minResolution,
             maxResolution: mapLayerAppearance.maxResolution,
@@ -171,24 +178,41 @@ Ext.define('ShogunClient.view.component.MapController', {
      */
     createOlLayerTileGrid: function(tileGridConfig) {
         var olLayerTileGrid;
+        var tileGridOrigin;
+        var tileGridExtent;
 
-        olLayerTileGrid = new ol.tilegrid.TileGrid({
-            extent: [
+        // check for required options
+        if (!tileGridConfig.type || !tileGridConfig.tileGridResolutions) {
+            Ext.Logger.warn('Could not create the ol.tilegrid for the ' +
+                    'current layer. Missing properties type and/or ' +
+                    'tileGridResolutions');
+            return false;
+        }
+
+        if (tileGridConfig.tileGridOrigin) {
+            tileGridOrigin = [
+                tileGridConfig.tileGridOrigin.x,
+                tileGridConfig.tileGridOrigin.y
+            ];
+        }
+
+        if (tileGridConfig.tileGridExtent) {
+            tileGridExtent = [
                 tileGridConfig.tileGridExtent.lowerLeft.x,
                 tileGridConfig.tileGridExtent.lowerLeft.y,
                 tileGridConfig.tileGridExtent.upperRight.x,
                 tileGridConfig.tileGridExtent.upperRight.y
-            ],
-            origin: [
-                tileGridConfig.tileGridOrigin.x,
-                tileGridConfig.tileGridOrigin.y
-            ],
+            ];
+        }
+
+        olLayerTileGrid = new ol.tilegrid[tileGridConfig.type]({
+            extent: tileGridExtent,
+            origin: tileGridOrigin,
             resolutions: tileGridConfig.tileGridResolutions,
             tileSize: tileGridConfig.tileSize || 256
         });
 
         return olLayerTileGrid;
-
     },
 
     /**
