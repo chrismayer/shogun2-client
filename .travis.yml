@@ -6,8 +6,8 @@ node_js:
 cache:
   directories:
     - node_modules
-    - __download
-    - __install
+    - ci/__download
+    - ci/__install
 
 before_install:
   - ./ci/create-sencha-environment.sh

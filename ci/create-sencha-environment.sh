@@ -15,10 +15,10 @@ if [ "$TRAVIS" != "true" ]; then
 fi
 
 # Where will downloaded fils go? Cached between builds via travis
-DOWN_DIR="$TRAVIS_BUILD_DIR/__download"
+DOWN_DIR="$TRAVIS_BUILD_DIR/ci/__download"
 
 # Where we will we install the sencha cmd? Cached between builds via travis
-INSTALL_DIR="$TRAVIS_BUILD_DIR/__install"
+INSTALL_DIR="$TRAVIS_BUILD_DIR/ci/__install"
 
 # The sencha workspace, won't be cached but be regenerated on every build
 SENCHA_WS="/tmp/sencha-workspace"
