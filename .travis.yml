@@ -18,6 +18,7 @@ install:
 script:
   - npm run js-lint
   - npm run test
+  - $TRAVIS_BUILD_DIR/ci/__install/sencha app build
 
 branches:
   only:
