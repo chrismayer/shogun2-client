@@ -29,7 +29,6 @@ Ext.define('ShogunClient.view.component.Map', {
         var ctrl = me.getController();
 
         ctrl.setMap();
-        ctrl.setControls();
 
         me.callParent(arguments);
     }
