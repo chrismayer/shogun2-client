@@ -1,5 +1,7 @@
 # shogun2-client
 
+[![Build Status](https://travis-ci.org/terrestris/shogun2-client.svg?branch=master)](https://travis-ci.org/terrestris/shogun2-client?branch=master)
+
 *shogun2-client* is an open project which provides a client web application for [SHOGun2](https://github.com/terrestris/shogun2) based on the [BasiGX](https://github.com/terrestris/BasiGX) package. By default, *shogun2-client* is used when a SHOGun2 webapplication is created with the `shogun2-webapp-archetype`.
 
 ## Requirements

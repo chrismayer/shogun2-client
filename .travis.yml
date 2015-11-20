@@ -1,0 +1,26 @@
+language: node_js
+
+node_js:
+  - "0.12"
+
+cache:
+  directories:
+    - node_modules
+    - ci/__download
+    - ci/__install
+
+before_install:
+  - ./ci/create-sencha-environment.sh
+
+install:
+  - npm install
+
+script:
+  - npm run js-lint
+  - npm run test
+  - $TRAVIS_BUILD_DIR/ci/__install/sencha app build
+
+branches:
+  only:
+    - master
+

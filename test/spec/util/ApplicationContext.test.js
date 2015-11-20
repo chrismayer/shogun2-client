@@ -13,7 +13,7 @@ describe('ShogunClient.util.ApplicationContext', function() {
 
     describe('All necessary parameters set', function() {
         it('appContextUrl', function() {
-            expect(clazz.pathConfig.appContextUrl).to.be.a('string');
+            expect(clazz.pathConfig.appContextUrlTpl).to.be.a('string');
         });
     });
 
@@ -26,7 +26,7 @@ describe('ShogunClient.util.ApplicationContext', function() {
                 expect(clazz.loadApplicationContext).to.be.a('function');
             });
             it('returns undefined if no callback function is given', function() {
-                expect(clazz.loadApplicationContext()).to.be(undefined);
+                expect(clazz.loadApplicationContext(42)).to.be(undefined);
             });
         });
         describe('#getValue', function() {
