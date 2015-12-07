@@ -6,7 +6,7 @@
 
 ## Requirements
 
-*shogun2-client* basically requires the same libraries / tools as [SHOGun2](https://github.com/terrestris/shogun2) and [BasiGX](https://github.com/terrestris/BasiGX) , espacially:
+*shogun2-client* basically requires the same libraries / tools as [SHOGun2](https://github.com/terrestris/shogun2) and [BasiGX](https://github.com/terrestris/BasiGX) , especially:
 * [Apache Maven](https://maven.apache.org/)
 * [Sencha Cmd v 6.0.2.14](https://www.sencha.com/products/sencha-cmd/)
 * [ExtJS 6](https://www.sencha.com/products/extjs/#overview)
