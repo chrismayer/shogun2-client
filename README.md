@@ -28,6 +28,8 @@
 
   `git remote add upstream https://github.com/terrestris/shogun2-client.git`
 
+* Run `sencha package repo add BasiGX http://terrestris.github.io/BasiGX/cmd/pkgs`
+
 * Run `sencha app upgrade /path/to/extjs`
 
 * Run `sencha app refresh`
