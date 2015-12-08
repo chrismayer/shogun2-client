@@ -13,30 +13,55 @@
 
 ## Installation
 
-* Update/checkout SHOGun2 and run `mvn clean install` in SHOGun2 project directory (the `src` folder)
-  * Please note: If SHOGun2 is updated you also have to reinitialize with `mvn clean install`
-* Generate your own fork of *shogun2-client*
-* Generate web application based on shogun2-webapp-archetype, e.g. with
+1. Update/checkout SHOGun2 and run `mvn clean install` in SHOGun2 project directory (the `src` folder)
+
+  * Please note: If SHOGun2 is updated you also have to reinitialize it with `mvn clean install`
+
+2. Generate your own fork of *shogun2-client*
+
+3. Generate a web application based on shogun2-webapp-archetype, e.g. with
+
   * [Eclipse Maven Plugin](http://www.eclipse.org/m2e/)
-  * executing the following command (ideally in your Eclipse workspace directory): https://github.com/terrestris/shogun2/wiki/Getting-started#generate-a-shogun2-based-web-application
-* After creation of the web application, set URL of your shogun2-client fork (username: `{github_username}`) in `pom.xml`:
+
+  * Execute the following command (ideally in your Eclipse workspace directory): https://github.com/terrestris/shogun2/wiki/Getting-started#generate-a-shogun2-based-web-application
+
+4. After creation of the web application, set the URL of your shogun2-client fork (username: `{github_username}`) in `pom.xml`:
 
    `<developerConnectionUrl>scm:git:git://github.com/{github_username}/shogun2-client.git</developerConnectionUrl>`
 
-* Run `mvn scm:checkout` in project directory `{projectDir}`
-* Go to `{projectDir}/src/main/webapp/client` and run:
+5. Go to our in project directory `{projectDir}` and run
 
-  `git remote add upstream https://github.com/terrestris/shogun2-client.git`
+  `$ mvn scm:checkout`
 
-* Run `sencha package repo add BasiGX http://terrestris.github.io/BasiGX/cmd/pkgs`
+6. Go to `{projectDir}/src/main/webapp/client` and run:
 
-* Run `sencha app upgrade /path/to/extjs`
+  `$ git remote add upstream https://github.com/terrestris/shogun2-client.git`
 
-* Run `sencha app refresh`
+7. In the same folder run
 
-* run tomcat or use `sencha app watch`
+  `$ sencha package repo add BasiGX http://terrestris.github.io/BasiGX/cmd/pkgs`
 
-* open http://localhost:1841/client
+  `$ sencha app upgrade {/path/to/extjs}`
+
+  `$ sencha app refresh`
+
+8. Run tomcat with your SHOGun2-webapplication (or use `sencha app watch`)
+
+9. Open
+
+  `http://localhost:8080/{webapp-name}/client/index.html?id={applicationId}`
+
+  Note: To get a valid `{applicationId}` just follow these steps:
+
+    * Adapt and open this URL:
+
+      `http://localhost:8080/{webapp-name}/application/findAll.action`
+
+    * The response will list all of your current SHOGun2 applications (and normally it should return the default one named _Default Application_ only)
+
+    * Find the entry `id` containing the ID of the application (e.g. `"id": 50`)
+
+    * Use this ID as GET parameter (see above)
 
 # Feedback
 
