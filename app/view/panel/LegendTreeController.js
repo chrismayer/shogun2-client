@@ -4,6 +4,10 @@
 Ext.define('ShogunClient.view.panel.LegendTreeController', {
     extend: 'Ext.app.ViewController',
 
+    requires: [
+        'ShogunClient.view.component.Map'
+    ],
+
     alias: 'controller.panel.legendtree',
 
     /**

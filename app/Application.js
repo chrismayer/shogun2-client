@@ -9,7 +9,9 @@ Ext.define('ShogunClient.Application', {
     requires: [
         'ShogunClient.util.ApplicationContext',
         'ShogunClient.util.URL',
-        'ShogunClient.util.Module'
+        'ShogunClient.util.Module',
+        'ShogunClient.view.component.Map',
+        'ShogunClient.view.panel.LegendTree'
     ],
 
     name: 'ShogunClient',
