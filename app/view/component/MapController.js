@@ -157,7 +157,8 @@ Ext.define('ShogunClient.view.component.MapController', {
             params: {
                 'LAYERS': mapLayerSource.layerNames,
                 'VERSION': mapLayerSource.version,
-                'TILED': true
+                'TILED': true,
+                'STYLES': mapLayerSource.layerStyles || null
             },
             crossOrigin: mapLayerSource.crossOrigin || null,
             gutter: mapLayerSource.gutter || 0,
